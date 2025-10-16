@@ -1,4 +1,3 @@
-...existing code...
 # Docker Private Registry — Harbor (HTTPS) — Quickfixed README
 
 
@@ -40,14 +39,14 @@ https://goharbor.io/docs/2.14.0/install-config/download-installer/
 https://github.com/goharbor/harbor/releases
 
 ## Install tools
-
+```bash
 sudo apt update
-sudo apt install -y openssl wget tar gnupg nano
-
+sudo apt install -y openssl net-tools wget tar gnupg nano
+```
 sudo su -
 hostnamectl set-hostname harbor-node1.com
 
-echo "10.75.1.100 harbor-node1.com elk" >> /etc/hosts
+echo "10.220.133.251 harbor-node1.com harbor-node1" >> /etc/hosts
 cat /etc/hosts
 
 shutdown -r now
@@ -82,14 +81,19 @@ docker ps
 
 ## Download Harbor installer
 
+## for Latest Release Download
+https://goharbor.io/docs/2.14.0/install-config/download-installer/
+
+
 wget https://github.com/goharbor/harbor/releases/download/v2.14.0/harbor-offline-installer-v2.14.0.tgz
+
 tar xzvf harbor-offline-installer-v2.14.0.tgz
 cd harbor
 
 Create CA and server certificate (example host: harbor-node1.com)
 
-sudo mkdir -p /root/harbor/data/cert
-cd /root/harbor/data/cert
+mkdir -p data/cert
+cd data/cert
 
 # Generate a CA certificate private key.
 
@@ -145,10 +149,16 @@ sudo cp ca.crt /etc/docker/certs.d/harbor-node1.com/ca.crt
 # Restart Docker
 sudo systemctl restart docker
 
+cd ../..
+
+
+cp harbor.yml.tmpl harbor.yml
+
 
 ## Configure Harbor (harbor.yml)
 # Edit harbor/harbor.yml (in the installer directory)
 # Set hostname and point to the certificate and private key you generated
+
 hostname: harbor-node1.com
 
 http:
@@ -156,28 +166,37 @@ http:
 
 https:
   port: 443
-  certificate: /root/harbor/data/cert/harbor-node1.com.crt
-  private_key: /root/harbor/data/cert/harbor-node1.com.key
+  certificate: /home/harish/harbor/data/cert/harbor-node1.com.crt
+  private_key: /home/harish/harbor/data/cert/harbor-node1.com.key
 
 harbor_admin_password: YourStrongPassword123
 
 
 ## Install Harbor
 # From the harbor installer directory
-sudo ./prepare
+./prepare
 # To install with default components:
 sudo ./install.sh
+
+
 
 
 # Manage compose
 docker compose down -v
 docker compose up -d
+sudo chown -R $USER:docker /home/harish/harbor
+
 
 docker login harbor-node1.com
 
 
 # To include Trivy for IMage Scanning :
+
+docker compose down -v
+
 sudo ./install.sh --with-trivy
+
+sudo chown -R $USER:docker /home/harish/harbor
 
 docker compose up -d
 
