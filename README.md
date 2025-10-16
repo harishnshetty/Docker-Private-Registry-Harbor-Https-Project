@@ -1,13 +1,12 @@
 Here’s your **GitHub README.md** file properly formatted and cleaned — all commands and technical steps remain unchanged, only Markdown structure, spacing, and readability have been fixed:
 
 ---
-
-````markdown
 # Docker Private Registry — Harbor (HTTPS) — With Trivy Image Scanner Setup
 
 [![Video Tutorial](https://github.com/harishnshetty/image-data-project/blob/ca3ebcefe72fa095427da3861d511352e22d8ca6/haribor0.jpg)](https://youtu.be/G6xeBhUgGBo)
 
 👉 [Project Page](https://harishnshetty.github.io/projects.html)
+
 
 ---
 
@@ -259,9 +258,4 @@ docker compose up -d
 
 ✅ **Setup Complete — Harbor (HTTPS) + Trivy Ready!**
 
-```
-
----
-
-Would you like me to include a **table of contents with clickable links** (like GitHub auto-scroll headings)? It makes long READMEs easier to navigate.
 ```
