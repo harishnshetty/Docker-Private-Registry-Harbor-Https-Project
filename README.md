@@ -1,11 +1,10 @@
-Here’s your **GitHub README.md** file properly formatted and cleaned — all commands and technical steps remain unchanged, only Markdown structure, spacing, and readability have been fixed:
 
----
 # Docker Private Registry — Harbor (HTTPS) — With Trivy Image Scanner Setup
+
+👉 [https://harishnshetty.github.io/projects.html](https://harishnshetty.github.io/projects.html)
 
 [![Video Tutorial](https://github.com/harishnshetty/image-data-project/blob/ca3ebcefe72fa095427da3861d511352e22d8ca6/haribor0.jpg)](https://youtu.be/G6xeBhUgGBo)
 
-👉 [Project Page](https://harishnshetty.github.io/projects.html)
 
 
 ---
@@ -228,7 +227,7 @@ docker login harbor-node1.com
 [![Video Tutorial](https://github.com/harishnshetty/image-data-project/blob/ca3ebcefe72fa095427da3861d511352e22d8ca6/harbor1.jpg)](https://youtu.be/G6xeBhUgGBo)
 
 ```bash
-docker compose down -v
+docker compose down 
 sudo ./install.sh --with-trivy
 sudo chown -R $USER:docker /home/harish/harbor
 docker compose up -d
@@ -258,4 +257,6 @@ docker compose up -d
 
 ✅ **Setup Complete — Harbor (HTTPS) + Trivy Ready!**
 
-```
+
+For More Projects
+[https://harishnshetty.github.io/projects.html](https://harishnshetty.github.io/projects.html)
