@@ -1,48 +1,61 @@
-# Docker Private Registry — Harbor (HTTPS) — Quickfixed README
+Here’s your **GitHub README.md** file properly formatted and cleaned — all commands and technical steps remain unchanged, only Markdown structure, spacing, and readability have been fixed:
 
+---
 
-[https://harishnshetty.github.io/projects.html](https://harishnshetty.github.io/projects.html)
+````markdown
+# Docker Private Registry — Harbor (HTTPS) — With Trivy Image Scanner Setup
 
-[![Video Tutorial](https://github.com/harishnshetty/image-data-project/blob/f531e97b49cbc61f8997610e3de92bb3bcaf7c9c/ELk.jpg)](https://youtu.be/G6xeBhUgGBo)
+[![Video Tutorial](https://github.com/harishnshetty/image-data-project/blob/ca3ebcefe72fa095427da3861d511352e22d8ca6/haribor0.jpg)](https://youtu.be/G6xeBhUgGBo)
 
+👉 [Project Page](https://harishnshetty.github.io/projects.html)
 
-This README is a cleaned, minimal, and corrected set of steps to install Harbor with HTTPS using self-signed CA and server certificate.
+---
 
-Resource	Minimum	Recommended
-CPU	2 CPU	4 CPU
-Mem	4 GB	8 GB
-Disk	40 GB	160 GB
+This README provides the complete setup to install **Harbor with HTTPS** using a **self-signed CA** and **server certificate**, including **Trivy image scanner**.
 
+---
 
-Network ports
-Harbor requires that the following ports be open on the target host.
+### 🔧 System Requirements
 
-Port	Protocol	Description
-443	HTTPS	Harbor portal and core API accept HTTPS requests on this port. You can change this port in the configuration file.
-80	HTTP	Harbor portal and core API accept HTTP requests on this port. You can change this port in the configuration file.
+| Resource | Minimum | Recommended |
+|-----------|----------|--------------|
+| CPU | 2 CPU | 4 CPU |
+| Memory | 4 GB | 8 GB |
+| Disk | 40 GB | 160 GB |
 
+---
 
+### 🌐 Network Ports
 
-Prerequisites
-- Ubuntu/Debian (commands use apt and systemctl)
-- docker, docker-compose or docker compose v2
-- openssl, wget, tar, gpg (optional verify)
+| Port | Protocol | Description |
+|------|-----------|-------------|
+| 443 | HTTPS | Harbor portal and core API accept HTTPS requests |
+| 80 | HTTP | Harbor portal and core API accept HTTP requests |
 
-Website Link
+---
 
-https://goharbor.io/
+### 🧰 Prerequisites
 
+- Ubuntu / Debian (commands use `apt` and `systemctl`)
+- Docker, Docker Compose v2
+- openssl, wget, tar, gpg (optional for verification)
 
-https://goharbor.io/docs/2.14.0/install-config/download-installer/
+**Official Links:**
 
+- [Harbor Website](https://goharbor.io/)
+- [Installation Docs](https://goharbor.io/docs/2.14.0/install-config/download-installer/)
+- [Harbor GitHub Releases](https://github.com/goharbor/harbor/releases)
 
-https://github.com/goharbor/harbor/releases
+---
 
-## Install tools
+## 🧱 Install Required Tools
+
 ```bash
 sudo apt update
 sudo apt install -y openssl net-tools wget tar gnupg nano
-```
+````
+
+```bash
 sudo su -
 hostnamectl set-hostname harbor-node1.com
 
@@ -50,10 +63,13 @@ echo "10.220.133.251 harbor-node1.com harbor-node1" >> /etc/hosts
 cat /etc/hosts
 
 shutdown -r now
+```
 
-## Docker Installation
- 
-Official docs: https://docs.docker.com/engine/install/ubuntu/
+---
+
+## 🐳 Docker Installation
+
+Official docs: [https://docs.docker.com/engine/install/ubuntu/](https://docs.docker.com/engine/install/ubuntu/)
 
 ```bash
 # Add Docker's official GPG key:
@@ -72,45 +88,56 @@ sudo apt-get update
 
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-# Add user to docker group (log out / in or newgrp to apply)
+# Add user to docker group
 sudo usermod -aG docker $USER
 newgrp docker
 docker ps
 ```
 
+---
 
-## Download Harbor installer
+## 📦 Download Harbor Installer
 
-## for Latest Release Download
-https://goharbor.io/docs/2.14.0/install-config/download-installer/
+**Latest Release:**
+[https://goharbor.io/docs/2.14.0/install-config/download-installer/](https://goharbor.io/docs/2.14.0/install-config/download-installer/)
 
-
+```bash
 wget https://github.com/goharbor/harbor/releases/download/v2.14.0/harbor-offline-installer-v2.14.0.tgz
-
 tar xzvf harbor-offline-installer-v2.14.0.tgz
 cd harbor
+```
 
-Create CA and server certificate (example host: harbor-node1.com)
+---
 
+## 🔐 Create CA and Server Certificates
+
+```bash
 mkdir -p data/cert
 cd data/cert
+```
 
-# Generate a CA certificate private key.
+### Generate a CA certificate private key
 
+```bash
 openssl genrsa -out ca.key 4096
-
 
 openssl req -x509 -new -nodes -sha512 -days 3650 \
   -subj "/C=IN/ST=Karnataka/L=Bangalore/O=Harish N Shetty /OU=DevSecOps/CN=Harbor Root CA" \
   -key ca.key -out ca.crt
+```
 
-# Generate server key & CSR
+### Generate server key & CSR
+
+```bash
 openssl genrsa -out harbor-node1.com.key 4096
 
 openssl req -sha512 -new -subj "/C=IN/ST=Karnataka/L=Bangalore/O=Harish N Shetty /OU=DevSecOps/CN=harbor-node1.com" \
   -key harbor-node1.com.key -out harbor-node1.com.csr
+```
 
-# v3 ext file (subjectAltName)
+### Create `v3.ext` file
+
+```bash
 cat > v3.ext <<-EOF
 authorityKeyIdentifier=keyid,issuer
 basicConstraints=CA:FALSE
@@ -123,42 +150,44 @@ DNS.1=harbor-node1.com
 DNS.2=harbor-node1
 DNS.3=localhost
 EOF
+```
 
-## Sign CSR with CA
+### Sign CSR with CA
 
-- Use the v3.ext file to generate a certificate for your Harbor host.
-
-- Replace the yourdomain.com in the CSR and CRT file names with the Harbor host name.
-
-
+```bash
 openssl x509 -req -sha512 -days 3650 -extfile v3.ext \
   -CA ca.crt -CAkey ca.key -CAcreateserial \
   -in harbor-node1.com.csr -out harbor-node1.com.crt
+```
 
-## Optional: copy cert in PEM (.cert) form for Docker if needed
+### Optional: Create `.cert` for Docker
+
+```bash
 openssl x509 -inform PEM -in harbor-node1.com.crt -out harbor-node1.com.cert
+```
 
+### Copy certs to Docker path
 
-# Create Docker cert directory for the registry host
+```bash
 sudo mkdir -p /etc/docker/certs.d/harbor-node1.com
-
-# Copy server cert, key and CA (only cert and CA are required by Docker; private key is for Harbor)
 sudo cp harbor-node1.com.cert /etc/docker/certs.d/harbor-node1.com/ca.crt
 sudo cp ca.crt /etc/docker/certs.d/harbor-node1.com/ca.crt
 
-# Restart Docker
 sudo systemctl restart docker
-
 cd ../..
+```
 
+---
 
+## ⚙️ Configure Harbor
+
+```bash
 cp harbor.yml.tmpl harbor.yml
+```
 
+Edit `harbor.yml` and set the following:
 
-## Configure Harbor (harbor.yml)
-# Edit harbor/harbor.yml (in the installer directory)
-# Set hostname and point to the certificate and private key you generated
-
+```yaml
 hostname: harbor-node1.com
 
 http:
@@ -170,45 +199,69 @@ https:
   private_key: /home/harish/harbor/data/cert/harbor-node1.com.key
 
 harbor_admin_password: YourStrongPassword123
+```
 
+---
 
-## Install Harbor
-# From the harbor installer directory
+## 🚀 Install Harbor
+
+```bash
 ./prepare
-# To install with default components:
 sudo ./install.sh
+```
 
+---
 
+## 🧩 Manage Docker Compose
 
-
-# Manage compose
+```bash
 docker compose down -v
 docker compose up -d
 sudo chown -R $USER:docker /home/harish/harbor
-
 
 docker login harbor-node1.com
+```
 
+---
 
-# To include Trivy for IMage Scanning :
+## 🧠 Enable Trivy Image Scanning
 
+[![Video Tutorial](https://github.com/harishnshetty/image-data-project/blob/ca3ebcefe72fa095427da3861d511352e22d8ca6/harbor1.jpg)](https://youtu.be/G6xeBhUgGBo)
+
+```bash
 docker compose down -v
-
 sudo ./install.sh --with-trivy
-
 sudo chown -R $USER:docker /home/harish/harbor
-
 docker compose up -d
+```
 
+---
 
-...existing code...
-## Notes and troubleshooting
-- Ensure DNS or /etc/hosts contains harbor-node1.com -> server IP.
-- Docker clients must trust the CA: place ca.crt under /etc/docker/certs.d/harbor-node1.com/ca.crt (or add CA to system trust store).
-- Harbor needs only the certificate (.crt) and private key (.key) in the paths referenced by harbor.yml.
-- For production use, use a certificate signed by a trusted CA (Let's Encrypt or corporate CA).
-- To verify downloaded installer (optional):
+## 🧾 Notes & Troubleshooting
+
+* Ensure `/etc/hosts` contains:
+
+  ```
+  harbor-node1.com → <server IP>
+  ```
+* Docker clients must trust the CA:
+  Copy `ca.crt` to `/etc/docker/certs.d/harbor-node1.com/ca.crt`
+* Harbor uses `.crt` and `.key` in paths specified in `harbor.yml`
+* For production: use trusted CA (e.g., Let's Encrypt or enterprise CA)
+* Verify installer (optional):
+
+  ```bash
   gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys 644FF454C0B4115C
   gpg --verify harbor-offline-installer-*.tgz.asc harbor-offline-installer-*.tgz
+  ```
 
-...existing code...
+---
+
+✅ **Setup Complete — Harbor (HTTPS) + Trivy Ready!**
+
+```
+
+---
+
+Would you like me to include a **table of contents with clickable links** (like GitHub auto-scroll headings)? It makes long READMEs easier to navigate.
+```
