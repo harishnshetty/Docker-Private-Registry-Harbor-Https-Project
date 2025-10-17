@@ -258,5 +258,5 @@ docker compose up -d
 ✅ **Setup Complete — Harbor (HTTPS) + Trivy Ready!**
 
 
-For More Projects
+## For More Projects
 [https://harishnshetty.github.io/projects.html](https://harishnshetty.github.io/projects.html)
