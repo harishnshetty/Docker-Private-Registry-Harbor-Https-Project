@@ -3,7 +3,7 @@
 
 👉 [https://harishnshetty.github.io/projects.html](https://harishnshetty.github.io/projects.html)
 
-[![Video Tutorial](https://github.com/harishnshetty/image-data-project/blob/ca3ebcefe72fa095427da3861d511352e22d8ca6/haribor0.jpg)](https://youtu.be/G6xeBhUgGBo)
+[![Video Tutorial](https://github.com/harishnshetty/image-data-project/blob/ca3ebcefe72fa095427da3861d511352e22d8ca6/haribor0.jpg)](https://youtu.be/3BRaMSF2OUE)
 
 
 
@@ -224,7 +224,7 @@ docker login harbor-node1.com
 
 ## 🧠 Enable Trivy Image Scanning
 
-[![Video Tutorial](https://github.com/harishnshetty/image-data-project/blob/ca3ebcefe72fa095427da3861d511352e22d8ca6/harbor1.jpg)](https://youtu.be/G6xeBhUgGBo)
+[![Video Tutorial](https://github.com/harishnshetty/image-data-project/blob/ca3ebcefe72fa095427da3861d511352e22d8ca6/harbor1.jpg)](https://youtu.be/3BRaMSF2OUE)
 
 ```bash
 docker compose down 
